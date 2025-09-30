@@ -5,7 +5,7 @@
 	
 	// Navigation items
 	const navItems = [
-		{ href: '/Courses', label: 'Courses' },
+		{ href: '/courses', label: 'Courses' },
 		{ href: '/learning-path', label: 'Learning Paths' },
 		{ href: '/all-access', label: 'Lifetime Access' },
 		{ href: '/forum', label: 'Forum' },
