@@ -23,7 +23,6 @@
 	function selectOption(option) {
 		selectedOption = option.label;
 		isDropdownOpen = false;
-		// You can add filter logic here
 		console.log('Selected category:', option.value);
 	}
 

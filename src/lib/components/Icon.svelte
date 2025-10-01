@@ -1,9 +1,9 @@
 <script>
 	/**
 	 * Icon component using SVG sprites
-	 * @param {string} name - Icon name (e.g., 'github', 'linkedin')
-	 * @param {string} size - Icon size (default: '24')
-	 * @param {string} className - Additional CSS classes
+	 * @param {string} name 
+	 * @param {string} size 
+	 * @param {string} className
 	 */
 	export let name;
 	export let size = '24';
