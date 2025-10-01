@@ -1,53 +1,57 @@
 <script>
 	import { page } from '$app/stores';
-    import logoDark from '$lib/assets/logo-white.png';
-    import logoWhite from '$lib/assets/logo-dark.png';
-	
+	import logoDark from '$lib/assets/logo-white.png';
+	import logoWhite from '$lib/assets/logo-dark.png';
+	import { onMount } from 'svelte';
+
 	// Navigation items
 	const navItems = [
 		{ href: '/courses', label: 'Courses' },
 		{ href: '/learning-path', label: 'Learning Paths' },
 		{ href: '/all-access', label: 'Lifetime Access' },
 		{ href: '/forum', label: 'Forum' },
-        { href: '/contact', label: 'Contact' }
+		{ href: '/contact', label: 'Contact' }
 	];
-	
+
 	let mobileMenuOpen = $state(false);
-	
+
 	function toggleMobileMenu() {
 		mobileMenuOpen = !mobileMenuOpen;
 	}
-	
+
 	function closeMobileMenu() {
 		mobileMenuOpen = false;
 	}
+
+	// Disable/enable body scroll when mobile menu opens/closes
+	$effect(() => {
+		if (typeof document !== 'undefined') {
+			if (mobileMenuOpen) {
+				document.body.style.overflow = 'hidden';
+			} else {
+				document.body.style.overflow = '';
+			}
+		}
+	});
 </script>
 
-<header class="sticky top-0 z-50 w-full bg-black/80 font-heading text-foreground backdrop-blur-md">
-	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-		<div class="flex justify-between items-center h-16">
+<header class="font-heading text-foreground sticky top-0 z-50 w-full bg-black/80 backdrop-blur-md">
+	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+		<div class="flex h-16 items-center justify-between">
 			<!-- Logo -->
 			<div class="flex items-center">
 				<a href="/" class="flex items-center space-x-2">
-					<img 
-						src={logoDark} 
-						alt="SvelteKit Logo" 
-						class="h-8 w-auto dark:hidden"
-					>
-					<img 
-						src={logoDark}
-						alt="SvelteKit Logo" 
-						class="h-8 w-auto hidden dark:block"
-					>
+					<img src={logoDark} alt="SvelteKit Logo" class="h-8 w-auto dark:hidden" />
+					<img src={logoDark} alt="SvelteKit Logo" class="hidden h-8 w-auto dark:block" />
 				</a>
 			</div>
 
 			<!-- Desktop Navigation -->
-			<nav class="hidden md:flex items-center justify-between gap-2">
+			<nav class="hidden items-center justify-between gap-2 md:flex">
 				{#each navItems as item}
-					<a 
+					<a
 						href={item.href}
-						class="relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-4xl font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer text-gray-500 hover:text-gray-300 dark:hover:text-white focus:text-white tracking-normal transition-colors duration-300 py-1 px-3
+						class="ring-offset-background relative inline-flex cursor-pointer items-center justify-center gap-2 rounded-4xl px-3 py-1 font-medium tracking-normal whitespace-nowrap text-gray-500 transition-colors duration-300 hover:text-gray-300 focus:text-white focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 dark:hover:text-white
 							{$page.url.pathname === item.href ? 'text-white' : ''}"
 					>
 						{item.label}
@@ -56,25 +60,65 @@
 			</nav>
 
 			<!-- Desktop CTA Button -->
-			<div class="hidden md:flex items-center space-x-4">
-				<button class="bg-white rounded-full px-6 py-2 text-black font-medium shadow-sm">
+			<div
+				class="block rounded-3xl bg-white px-3 py-1 no-underline outline-none hover:bg-gray-300 hover:no-underline"
+			>
+				<button class="text-base tracking-normal text-black transition-colors duration-300">
 					Members Area
 				</button>
 			</div>
 
 			<!-- Mobile menu button -->
-			<div class="md:hidden">
+			<div class="flex md:hidden">
 				<button
+					class="ring-offset-background focus-visible:ring-ring hover:text-accent hover:border-accent relative inline-flex cursor-pointer items-center justify-center gap-2 rounded-4xl border border-gray-500 p-2 font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
 					onclick={toggleMobileMenu}
-					class="text-gray-600 hover:text-gray-900 focus:outline-none focus:text-gray-900 p-2"
-					aria-label="Toggle mobile menu"
+					aria-haspopup="menu"
+					aria-expanded={mobileMenuOpen}
+					aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+					type="button"
 				>
-					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						{#if mobileMenuOpen}
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-						{:else}
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-						{/if}
+					<svg
+						width="18"
+						height="18"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg"
+						class="text-white"
+						stroke="currentColor"
+						stroke-linecap="round"
+						fill="none"
+					>
+						<line
+							class="origin-center stroke-2 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+							class:translate-x-[-3px]={mobileMenuOpen}
+							class:translate-y-[4px]={mobileMenuOpen}
+							class:rotate-45={mobileMenuOpen}
+							x1="3"
+							y1="6"
+							x2="21"
+							y2="6"
+						>
+						</line>
+						<line
+							class="stroke-2 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+							class:opacity-0={mobileMenuOpen}
+							x1="3"
+							y1="12"
+							x2="21"
+							y2="12"
+						>
+						</line>
+						<line
+							class="origin-center stroke-2 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+							class:translate-x-[-3px]={mobileMenuOpen}
+							class:-translate-y-[4px]={mobileMenuOpen}
+							class:-rotate-45={mobileMenuOpen}
+							x1="3"
+							y1="18"
+							x2="21"
+							y2="18"
+						>
+						</line>
 					</svg>
 				</button>
 			</div>
@@ -83,24 +127,53 @@
 
 	<!-- Mobile Navigation Menu -->
 	{#if mobileMenuOpen}
-		<div class="md:hidden bg-white border-t border-gray-200">
-			<div class="px-2 pt-2 pb-3 space-y-1">
+		<div
+			id="bits-16"
+			data-bits-floating-content-wrapper=""
+			dir="ltr"
+			style="position: fixed; left: 0px; top: 0px; transform: translate(0px, 50px); will-change: transform; min-width: max-content; z-index: 50; --bits-floating-transform-origin: 50% 0px; --bits-floating-available-width: 342px; --bits-floating-available-height: 457px; --bits-floating-anchor-width: 34px; --bits-floating-anchor-height: 34px; pointer-events: auto;"
+		>
+			<div
+				forcemount="false"
+				class="bg-background rounded-0 top-full z-50 h-screen w-screen max-w-full overflow-hidden p-3 shadow-md"
+				role="menu"
+				aria-orientation="vertical"
+				data-dropdown-menu-content=""
+				data-state="open"
+				data-side="bottom"
+				data-align="center"
+				tabindex="-1"
+				style="pointer-events: auto; --bits-dropdown-menu-content-transform-origin: var(--bits-floating-transform-origin); --bits-dropdown-menu-content-available-width: var(--bits-floating-available-width); --bits-dropdown-menu-content-available-height: var(--bits-floating-available-height); --bits-dropdown-menu-anchor-width: var(--bits-floating-anchor-width); --bits-dropdown-menu-anchor-height: var(--bits-floating-anchor-height);"
+			>
 				{#each navItems as item}
-					<a 
-						href={item.href}
-						onclick={closeMobileMenu}
-						class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-colors
-							{$page.url.pathname === item.href ? 'text-indigo-600 bg-indigo-50' : ''}"
+					<div
+						class="w-full !bg-transparent p-3"
+						tabindex="-1"
+						role="menuitem"
+						aria-disabled="false"
+						data-dropdown-menu-item=""
 					>
-						{item.label}
-					</a>
+						<a
+							class="font-heading data-[active=true]:text-accent block w-full font-bold text-gray-400 hover:text-gray-100 focus:outline-0"
+							href={item.href}
+							onclick={closeMobileMenu}
+							data-active={$page.url.pathname === item.href ? "true" : "false"}
+						>
+							{item.label}
+						</a>
+					</div>
 				{/each}
-				<div class="pt-4">
-					<button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-						Bắt đầu
+				
+				<div class="w-full !bg-transparent p-3 pt-6">
+					<button
+						class="w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
+						onclick={closeMobileMenu}
+					>
+						Members Area
 					</button>
 				</div>
 			</div>
 		</div>
 	{/if}
+
 </header>
