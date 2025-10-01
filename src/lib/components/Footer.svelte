@@ -1,11 +1,25 @@
 <script>
+	import Icon from './Icon.svelte';
+	import SvgSprites from './SvgSprites.svelte';
+
 	const policyLinks = [
 		{ href: '/terms', label: 'Terms of Use' },
 		{ href: '/privacy', label: 'Privacy Policy' }
 	];
+
+	const socialLinks = [
+		{ name: 'github', href: 'https://github.com/codewithmosh', label: 'GitHub' },
+		{ name: 'linkedin', href: 'https://www.linkedin.com/in/codewithmosh', label: 'LinkedIn' },
+		{ name: 'youtube', href: 'https://www.youtube.com/c/programmingwithmosh', label: 'YouTube' },
+		{ name: 'discord', href: 'https://discord.gg/codewithmosh', label: 'Discord' },
+		{ name: 'x', href: 'https://x.com/moshhamedani', label: 'X (Twitter)' }
+	];
 </script>
 
 <footer class="relative mt-20 overflow-hidden border-t-1 border-t-slate-900 bg-black">
+	<!-- SVG Sprites -->
+	<SvgSprites />
+	
 	<div class="text-foreground mx-auto max-w-7xl px-3 py-10 lg:px-6">
 		<div class="flex flex-col items-center justify-between space-y-5 md:flex-row md:space-y-0">
 			<!-- Left Section -->
@@ -15,46 +29,17 @@
 
 			<!-- Center Section: Social Icons -->
 			<div class="flex flex-row space-x-5 transition-colors duration-150">
-				<a
-					class="inline-block text-xl text-gray-500 hover:text-white"
-					href="https://github.com/directus/directus"
-					target="_blank"
-					rel="noopener noreferrer"
-					aria-labelledby="github"
-					><svg class="icon h-[24px] w-[24px]"><use href="#social__github"></use></svg>
-				</a>
-				<a
-					class="inline-block text-xl text-gray-500 hover:text-white"
-					href="https://www.linkedin.com/company/directus-io"
-					target="_blank"
-					rel="noopener noreferrer"
-					aria-labelledby="linkedin"
-					><svg class="icon h-[24px] w-[24px]"><use href="#social__linkedin"></use></svg>
-				</a>
-				<a
-					class="inline-block text-xl text-gray-500 hover:text-white"
-					href="https://www.youtube.com/c/DirectusVideos"
-					target="_blank"
-					rel="noopener noreferrer"
-					aria-labelledby="youtube"
-					><svg class="icon h-[24px] w-[24px]"><use href="#social__youtube"></use></svg>
-				</a>
-				<a
-					class="inline-block text-xl text-gray-500 hover:text-white"
-					href="https://directus.chat/"
-					target="_blank"
-					rel="noopener noreferrer"
-					aria-labelledby="discord"
-					><svg class="icon h-[24px] w-[24px]"><use href="#social__discord"></use></svg>
-				</a>
-				<a
-					class="inline-block text-xl text-gray-500 hover:text-white"
-					href="https://x.com/directus"
-					target="_blank"
-					rel="noopener noreferrer"
-					aria-labelledby="x"
-					><svg class="icon h-[24px] w-[24px]"><use href="#social__x"></use></svg>
-				</a>
+				{#each socialLinks as social}
+					<a
+						class="inline-block text-xl text-gray-500 hover:text-white transition-colors duration-200"
+						href={social.href}
+						target="_blank"
+						rel="noopener noreferrer"
+						aria-label={social.label}
+					>
+						<Icon name={social.name} size="24" />
+					</a>
+				{/each}
 			</div>
 
 			<!-- Right Section -->

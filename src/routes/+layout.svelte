@@ -12,7 +12,7 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<div class="bg-black relative z-10 flex min-h-svh flex-col">
+<div class="bg-background relative z-10 flex min-h-svh flex-col">
 	<!-- Header -->
 	<Header />
 	

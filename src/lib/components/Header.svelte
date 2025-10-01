@@ -1,8 +1,6 @@
 <script>
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import logoDark from '$lib/assets/logo-white.png';
-	import logoWhite from '$lib/assets/logo-dark.png';
-	import { onMount } from 'svelte';
 
 	// Navigation items
 	const navItems = [
@@ -36,92 +34,90 @@
 </script>
 
 <header class="font-heading text-foreground sticky top-0 z-50 w-full bg-black/80 backdrop-blur-md">
-	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-		<div class="flex h-16 items-center justify-between">
-			<!-- Logo -->
-			<div class="flex items-center">
-				<a href="/" class="flex items-center space-x-2">
-					<img src={logoDark} alt="SvelteKit Logo" class="h-8 w-auto dark:hidden" />
-					<img src={logoDark} alt="SvelteKit Logo" class="hidden h-8 w-auto dark:block" />
-				</a>
-			</div>
+	<div class="mx-auto flex max-w-7xl items-center justify-between px-3 py-2 md:py-4 lg:px-6">
+		<!-- Logo -->
+		<div class="flex items-center">
+			<a href="/" class="flex items-center space-x-2">
+				<img src={logoDark} alt="SvelteKit Logo" class="h-8 w-auto dark:hidden" />
+				<img src={logoDark} alt="SvelteKit Logo" class="hidden h-8 w-auto dark:block" />
+			</a>
+		</div>
 
-			<!-- Desktop Navigation -->
-			<nav class="hidden items-center justify-between gap-2 md:flex">
-				{#each navItems as item}
-					<a
-						href={item.href}
-						class="ring-offset-background relative inline-flex cursor-pointer items-center justify-center gap-2 rounded-4xl px-3 py-1 font-medium tracking-normal whitespace-nowrap text-gray-500 transition-colors duration-300 hover:text-gray-300 focus:text-white focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 dark:hover:text-white
-							{$page.url.pathname === item.href ? 'text-white' : ''}"
-					>
-						{item.label}
-					</a>
-				{/each}
-			</nav>
-
-			<!-- Desktop CTA Button -->
-			<div
-				class="block rounded-3xl bg-white px-3 py-1 no-underline outline-none hover:bg-gray-300 hover:no-underline"
-			>
-				<button class="text-base tracking-normal text-black transition-colors duration-300">
-					Members Area
-				</button>
-			</div>
-
-			<!-- Mobile menu button -->
-			<div class="flex md:hidden">
-				<button
-					class="ring-offset-background focus-visible:ring-ring hover:text-accent hover:border-accent relative inline-flex cursor-pointer items-center justify-center gap-2 rounded-4xl border border-gray-500 p-2 font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
-					onclick={toggleMobileMenu}
-					aria-haspopup="menu"
-					aria-expanded={mobileMenuOpen}
-					aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
-					type="button"
+		<!-- Desktop Navigation -->
+		<nav class="hidden items-center justify-between gap-2 md:flex">
+			{#each navItems as item}
+				<a
+					href={item.href}
+					class="ring-offset-background relative inline-flex cursor-pointer items-center justify-center gap-2 rounded-4xl px-3 py-1 font-medium tracking-normal whitespace-nowrap text-gray-500 transition-colors duration-300 hover:text-gray-300 focus:text-white focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 dark:hover:text-white
+							{page.url.pathname === item.href ? 'text-white' : ''}"
 				>
-					<svg
-						width="18"
-						height="18"
-						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
-						class="text-white"
-						stroke="currentColor"
-						stroke-linecap="round"
-						fill="none"
+					{item.label}
+				</a>
+			{/each}
+		</nav>
+
+		<!-- Desktop CTA Button -->
+		<div
+			class="block rounded-3xl bg-white px-3 py-1 no-underline outline-none hover:bg-gray-300 hover:no-underline"
+		>
+			<button class="text-base tracking-normal text-black transition-colors duration-300">
+				Members Area
+			</button>
+		</div>
+
+		<!-- Mobile menu button -->
+		<div class="flex md:hidden">
+			<button
+				class="ring-offset-background focus-visible:ring-ring hover:text-accent hover:border-accent relative inline-flex cursor-pointer items-center justify-center gap-2 rounded-4xl border border-gray-500 p-2 font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+				onclick={toggleMobileMenu}
+				aria-haspopup="menu"
+				aria-expanded={mobileMenuOpen}
+				aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+				type="button"
+			>
+				<svg
+					width="18"
+					height="18"
+					viewBox="0 0 24 24"
+					xmlns="http://www.w3.org/2000/svg"
+					class="text-white"
+					stroke="currentColor"
+					stroke-linecap="round"
+					fill="none"
+				>
+					<line
+						class="origin-center stroke-2 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+						class:translate-x-[-3px]={mobileMenuOpen}
+						class:translate-y-[4px]={mobileMenuOpen}
+						class:rotate-45={mobileMenuOpen}
+						x1="3"
+						y1="6"
+						x2="21"
+						y2="6"
 					>
-						<line
-							class="origin-center stroke-2 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
-							class:translate-x-[-3px]={mobileMenuOpen}
-							class:translate-y-[4px]={mobileMenuOpen}
-							class:rotate-45={mobileMenuOpen}
-							x1="3"
-							y1="6"
-							x2="21"
-							y2="6"
-						>
-						</line>
-						<line
-							class="stroke-2 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
-							class:opacity-0={mobileMenuOpen}
-							x1="3"
-							y1="12"
-							x2="21"
-							y2="12"
-						>
-						</line>
-						<line
-							class="origin-center stroke-2 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
-							class:translate-x-[-3px]={mobileMenuOpen}
-							class:-translate-y-[4px]={mobileMenuOpen}
-							class:-rotate-45={mobileMenuOpen}
-							x1="3"
-							y1="18"
-							x2="21"
-							y2="18"
-						>
-						</line>
-					</svg>
-				</button>
-			</div>
+					</line>
+					<line
+						class="stroke-2 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+						class:opacity-0={mobileMenuOpen}
+						x1="3"
+						y1="12"
+						x2="21"
+						y2="12"
+					>
+					</line>
+					<line
+						class="origin-center stroke-2 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+						class:translate-x-[-3px]={mobileMenuOpen}
+						class:-translate-y-[4px]={mobileMenuOpen}
+						class:-rotate-45={mobileMenuOpen}
+						x1="3"
+						y1="18"
+						x2="21"
+						y2="18"
+					>
+					</line>
+				</svg>
+			</button>
 		</div>
 	</div>
 
@@ -157,13 +153,13 @@
 							class="font-heading data-[active=true]:text-accent block w-full font-bold text-gray-400 hover:text-gray-100 focus:outline-0"
 							href={item.href}
 							onclick={closeMobileMenu}
-							data-active={$page.url.pathname === item.href ? "true" : "false"}
+							data-active={page.url.pathname === item.href ? 'true' : 'false'}
 						>
 							{item.label}
 						</a>
 					</div>
 				{/each}
-				
+
 				<div class="w-full !bg-transparent p-3 pt-6">
 					<button
 						class="w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
@@ -175,5 +171,4 @@
 			</div>
 		</div>
 	{/if}
-
 </header>
