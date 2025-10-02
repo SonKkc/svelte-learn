@@ -1,4 +1,5 @@
 <script>
+	import CTAButtons from '$lib/components/shared/CTAButtons.svelte';
 	import featureImg1 from '$lib/assets/images/feature-01.webp';
 	import featureImg2 from '$lib/assets/images/feature-02.webp';
 	import featureImg3 from '$lib/assets/images/feature-03.webp';
@@ -30,23 +31,12 @@
 					<track kind="captions" srclang="en" label="English" src="data:text/vtt,WEBVTT" default />
 				</video>
 			</div>
-			<a
-				class="group text-md undefined inline-block rounded-full bg-pink-700 px-6 py-3 text-center font-medium text-white no-underline transition-all duration-200 ease-out hover:bg-pink-600 hover:text-white hover:no-underline md:font-semibold"
-				role="button"
-				href="/p/build-ai-powered-apps"
-				>Learn More<svg
-					xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 24 24"
-					fill="currentColor"
-					aria-hidden="true"
-					class="inline-block h-4 w-6 transition-all duration-200 ease-out group-hover:ml-3"
-					><path
-						fill-rule="evenodd"
-						d="M12.97 3.97a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06l6.22-6.22H3a.75.75 0 010-1.5h16.19l-6.22-6.22a.75.75 0 010-1.06z"
-						clip-rule="evenodd"
-					></path></svg
-				></a
-			>
+			<CTAButtons 
+				primaryText="Learn More"
+				primaryHref="/p/build-ai-powered-apps"
+				secondaryText=""
+				showIcon={true}
+			/>
 		</div>
 	</div>
 </section>
@@ -465,17 +455,7 @@
 				> helping them sharpen their skills and stay ahead in their fields.
 			</p>
 			<div style="opacity: 1; transform: none;">
-				<div class="flex flex-col gap-5 md:flex-row">
-					<a
-						class="group text-md hover:bg-violet-650 undefined inline-block rounded-full bg-violet-500 px-6 py-3 text-center font-medium text-white no-underline transition-all duration-200 ease-out hover:text-white hover:no-underline md:font-semibold"
-						role="button"
-						href="/courses">Browse Courses</a
-					><a
-						class="group text-md undefined inline-block rounded-full bg-pink-700 px-6 py-3 text-center font-medium text-white no-underline transition-all duration-200 ease-out hover:bg-pink-600 hover:text-white hover:no-underline md:font-semibold"
-						role="button"
-						href="https://sso.teachable.com/secure/146684/identity/sign_up">Join for Free</a
-					>
-				</div>
+				<CTAButtons />
 			</div>
 		</div>
 	</section>
