@@ -1,21 +1,15 @@
-<script>
-	/**
-	 * Icon component using SVG sprites
-	 * @param {string} name 
-	 * @param {string} size 
-	 * @param {string} className
-	 */
-	export let name;
-	export let size = '24';
+<script lang="ts">
+	export let name: string;
+	export let size: string | number = '24';
 	export let className = '';
 </script>
 
-<svg 
-	class="fill-current {className}" 
-	width={size} 
-	height={size} 
-	viewBox="0 0 24 24"
-	aria-hidden="true"
+<svg
+	class="fill-current {className}"
+	width={size}
+	height={size}
+	role="img"
+	aria-label={name}
 >
-	<use href="#icon-{name}"></use>
+	<use href="#icon-{name}" />
 </svg>
