@@ -38,6 +38,7 @@
     --color-gray-950: oklch(13% .028 261.692);
     --color-black: #000;
     --color-white: #fff;
+    --color-gray-350: #68686880;
     --spacing: .25rem;
     --breakpoint-md: 48rem;
     --container-sm: 24rem;
