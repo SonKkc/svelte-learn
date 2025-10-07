@@ -90,7 +90,7 @@
 		</header>
 		<div class="mb-10 flex flex-col items-center gap-2 md:flex-row md:justify-center">
 			<div class="flex">
-				<span class="mr-1 text-lg font-bold text-gray-100">Excellent</span><span
+				<span class="mr-1 text-lg font-bold !text-gray-100">Excellent</span><span
 					class="mx-2 flex items-center"
 					><img
 						alt="Stars"
@@ -106,7 +106,7 @@
 					/>
 				</span>
 			</div>
-			<div>
+			<div class="text-[#686868]">
 				<span class="mr-1 font-bold">{rating}</span>out of 5 based on
 				<a target="_blank" href="https://www.trustpilot.com/review/codewithmosh.com">
 					<span class="font-bold">{reviewCount}</span> reviews

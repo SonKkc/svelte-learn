@@ -16,15 +16,15 @@
 	];
 </script>
 
-<footer class="relative mt-20 overflow-hidden border-t-1 border-t-slate-900 bg-black">
+<footer class="relative mt-20 overflow-hidden border-t-1 border-t-slate-900 bg-background">
 	<!-- SVG Sprites -->
 	<SvgSprites />
 	
 	<div class="text-foreground mx-auto max-w-7xl px-3 py-10 lg:px-6">
 		<div class="flex flex-col items-center justify-between space-y-5 md:flex-row md:space-y-0">
 			<!-- Left Section -->
-			<div class="flex items-center font-medium text-gray-500 hover:text-white">
-				<span>© Code with Mosh</span>
+			<div class="fflex flex-col md:flex-row items-center justify-between space-y-5 md:space-y-0">
+				<a href="/" class="hover:text-white">© Code with Mosh</a>
 			</div>
 
 			<!-- Center Section: Social Icons -->
@@ -43,9 +43,9 @@
 			</div>
 
 			<!-- Right Section -->
-			<div class="flex items-center space-x-6">
+			<div class="flex flex-row justify-end md:justify-center gap-4">
 				{#each policyLinks as link}
-					<a href={link.href} class="font-medium text-gray-500 hover:text-white">{link.label}</a>
+					<a href={link.href} class="font-medium hover:underline">{link.label}</a>
 				{/each}
 			</div>
 		</div>
