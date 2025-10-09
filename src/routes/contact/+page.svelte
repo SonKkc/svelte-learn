@@ -25,7 +25,7 @@
 					<p class="mb-8">
 						For course suggestions and career advice, check out our
 						<a
-							href="/p/learning-paths"
+							href=""
 							class="text-violet-500 hover:text-violet-400 underline"
 							>learning paths</a
 						>.

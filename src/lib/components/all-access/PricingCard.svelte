@@ -12,7 +12,7 @@
 	export let countryFlag: string = "🇻🇳";
 </script>
 
-<div class="relative w-full md:max-w-[450px]" role="enrollment-card">
+<div class="relative w-full md:max-w-[450px]">
 	<div class="relative rounded-3xl bg-gradient-to-b from-slate-700 to-transparent p-[1px]">
 		<div
 			class="via-slate-850 overflow-hidden rounded-3xl bg-gradient-to-b from-slate-800 to-slate-900 p-6 shadow-lg md:p-8"
