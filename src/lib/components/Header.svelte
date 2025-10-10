@@ -21,7 +21,7 @@
 		mobileMenuOpen = false;
 	}
 
-	// Disable/enable body scroll when mobile menu opens/closes
+	
 	$effect(() => {
 		if (typeof document !== 'undefined') {
 			if (mobileMenuOpen) {

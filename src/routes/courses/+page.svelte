@@ -1,16 +1,36 @@
 <script>
-    import { onMount } from 'svelte';
     import { scale } from 'svelte/transition';
     import CourseCard from '$lib/components/CourseCard.svelte';
     
-    // State management
+    export let data;
+    
+    $: allCourses = data?.courses || [];
+    $: error = data?.error || null;
+    
+    // Client-side filtering state
     let isDropdownOpen = false;
     let selectedOption = 'All courses';
     let selectedCategory = 'all';
     let searchTerm = '';
-    let courses = [];
-    let loading = true;
-    let error = null;
+    
+    // Filtered courses (reactive)
+    $: filteredCourses = (() => {
+        let result = allCourses;
+        
+        if (selectedCategory !== 'all') {
+            result = result.filter(course => course.category === selectedCategory);
+        }
+
+        if (searchTerm.trim()) {
+            const searchLower = searchTerm.toLowerCase();
+            result = result.filter(course =>
+                course.title.toLowerCase().includes(searchLower) ||
+                course.description.toLowerCase().includes(searchLower)
+            );
+        }
+        
+        return result;
+    })();
 
     // Course categories
     const courseCategories = [
@@ -19,51 +39,6 @@
         { value: 'backend', label: 'Backend development' },
         { value: 'se', label: 'Software Engineering Essentials' }
     ];
-
-    // Fetch courses from local server endpoint
-    async function fetchCourses() {
-        try {
-            loading = true;
-            error = null;
-            
-            let url = '/courses'; // Updated to use local endpoint
-            let options = {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            };
-            
-            // If we have filters, use POST method
-            if (selectedCategory !== 'all' || searchTerm.trim()) {
-                options.method = 'POST';
-                options.body = JSON.stringify({
-                    category: selectedCategory,
-                    search: searchTerm.trim()
-                });
-            }
-            
-            const response = await fetch(url, options);
-            const result = await response.json();
-            
-            if (!result.success) {
-                throw new Error(result.error || 'Failed to fetch courses');
-            }
-            
-            courses = result.data;
-            
-        } catch (err) {
-            error = err.message;
-            console.error('Error fetching courses:', err);
-        } finally {
-            loading = false;
-        }
-    }
-
-    // Load courses on mount
-    onMount(() => {
-        fetchCourses();
-    });
 
     // Dropdown functions
     function toggleDropdown() {
@@ -74,9 +49,6 @@
         selectedOption = option.label;
         selectedCategory = option.value;
         isDropdownOpen = false;
-        
-        // Fetch courses with new filter
-        fetchCourses();
     }
 
     function handleClickOutside(event) {
@@ -85,25 +57,27 @@
         }
     }
 
-    // Search functionality
-    let searchTimeout;
+    // Search functionality (instant filtering)
     function handleSearch(event) {
         searchTerm = event.target.value;
-        
-        // Debounce search
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            fetchCourses();
-        }, 500);
     }
 
-    // Retry function
-    function retryFetch() {
-        fetchCourses();
+    // Clear filters
+    function clearFilters() {
+        selectedCategory = 'all';
+        selectedOption = 'All courses';
+        searchTerm = '';
     }
+
+    $: hasActiveFilters = selectedCategory !== 'all' || searchTerm.trim() !== '';
 </script>
 
 <svelte:window on:click={handleClickOutside} />
+
+<svelte:head>
+    <title>Courses | Code with Mosh</title>
+    <meta name="description" content="Master software development with structured courses designed to make you job-ready." />
+</svelte:head>
 
 <div class="py-8">
     <div
@@ -126,7 +100,7 @@
                 name="search"
                 type="text"
                 on:input={handleSearch}
-                value={searchTerm}
+                bind:value={searchTerm}
             />
         </div>
         <div class="dropdown-container relative w-auto">
@@ -200,36 +174,70 @@
         </div>
     </div>
     
-    <div class="flex flex-col items-center">
-        {#if loading}
-            <!-- Loading state -->
-            <div class="mt-10 flex items-center justify-center">
-                <div class="flex items-center space-x-2">
-                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500"></div>
-                    <span class="text-lg">Loading courses...</span>
-                </div>
+    <!-- Filter indicator and clear button -->
+    {#if hasActiveFilters}
+        <div class="mb-4 flex items-center justify-between rounded-lg bg-gray-800 p-3">
+            <div class="flex items-center space-x-2 text-sm">
+                <span class="text-gray-400">Active filters:</span>
+                {#if selectedCategory !== 'all'}
+                    <span class="rounded bg-violet-500 px-2 py-1 text-white">
+                        {courseCategories.find(cat => cat.value === selectedCategory)?.label}
+                    </span>
+                {/if}
+                {#if searchTerm.trim()}
+                    <span class="rounded bg-blue-500 px-2 py-1 text-white">
+                        "{searchTerm}"
+                    </span>
+                {/if}
             </div>
-        {:else if error}
+            <button
+                class="text-sm text-violet-400 hover:text-violet-300"
+                on:click={clearFilters}
+            >
+                Clear all
+            </button>
+        </div>
+    {/if}
+    
+    <div class="flex flex-col items-center">
+        {#if error}
             <!-- Error state -->
             <div class="mt-10 flex flex-col items-center">
                 <div class="text-red-500 text-lg mb-4">Error: {error}</div>
                 <button 
                     class="px-4 py-2 bg-violet-500 text-white rounded hover:bg-violet-600"
-                    on:click={retryFetch}
+                    on:click={() => window.location.reload()}
                 >
                     Try Again
                 </button>
             </div>
-        {:else if courses.length === 0}
+        {:else if filteredCourses.length === 0 && allCourses.length > 0}
             <!-- No results state -->
             <div class="mt-10 flex flex-col items-center">
                 <div class="text-gray-400 text-lg mb-4">No courses found</div>
-                <p class="text-gray-500">Try adjusting your search or filter criteria</p>
+                <p class="text-gray-500 mb-4">Try adjusting your search or filter criteria</p>
+                <button
+                    class="px-4 py-2 bg-violet-500 text-white rounded hover:bg-violet-600"
+                    on:click={clearFilters}
+                >
+                    Show all courses
+                </button>
+            </div>
+        {:else if allCourses.length === 0}
+            <!-- Loading or no data state -->
+            <div class="mt-10 flex flex-col items-center">
+                <div class="text-gray-400 text-lg mb-4">No courses available</div>
+                <button 
+                    class="px-4 py-2 bg-violet-500 text-white rounded hover:bg-violet-600"
+                    on:click={() => window.location.reload()}
+                >
+                    Reload
+                </button>
             </div>
         {:else}
             <!-- Courses grid -->
             <div class="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {#each courses as course, index}
+                {#each filteredCourses as course, index}
                     <CourseCard
                         href={course.href}
                         imageSrc={course.imageSrc}
@@ -242,7 +250,10 @@
             
             <!-- Results info -->
             <div class="mt-8 text-center text-gray-400">
-                Showing {courses.length} course{courses.length === 1 ? '' : 's'}
+                Showing {filteredCourses.length} of {allCourses.length} course{allCourses.length === 1 ? '' : 's'}
+                {#if hasActiveFilters}
+                    <span class="text-violet-400">(filtered)</span>
+                {/if}
             </div>
         {/if}
     </div>

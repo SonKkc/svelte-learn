@@ -4,6 +4,17 @@
 	export let imageAlt = "XAUt0 is gold without borders: Q&A with USDT0 co-founder Lorenzo R";
 	export let title = "XAUt0 is gold without borders: Q&A with USDT0 co-founder Lorenzo R";
 	export let description = "As digital assets evolve, we're starting to see more real-world value being brought on-chain, quite literally.";
+
+    function createSlug(title) {
+        return title
+            .toLowerCase()
+            .trim()
+            .replace(/[^\w\s-]/g, '') 
+            .replace(/[\s_-]+/g, '-') 
+            .replace(/^-+|-+$/g, '');
+    }
+    
+    $: courseHref = href || `/courses/${createSlug(title)}`;
 </script>
 
 <a
