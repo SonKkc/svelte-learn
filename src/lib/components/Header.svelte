@@ -1,6 +1,7 @@
 <script>
 	import { page } from '$app/state';
 	import logoDark from '$lib/assets/logo-white.png';
+	import CartButton from '$lib/components/CartButton.svelte';
 
 	// Navigation items
 	const navItems = [
@@ -34,48 +35,51 @@
 </script>
 
 <header class="font-heading text-foreground sticky top-0 z-50 w-full bg-black/80 backdrop-blur-md">
-	<div class="mx-auto flex max-w-7xl items-center justify-between px-3 py-2 md:py-4 lg:px-6">
-		<!-- Logo -->
-		<div class="flex items-center">
-			<a href="/" class="flex items-center space-x-2">
-				<img src={logoDark} alt="SvelteKit Logo" class="h-8 w-auto dark:hidden" />
-				<img src={logoDark} alt="SvelteKit Logo" class="hidden h-8 w-auto dark:block" />
-			</a>
-		</div>
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-3 py-2 md:py-4 lg:px-6">
+        <!-- Logo -->
+        <div class="flex items-center">
+            <a href="/" class="flex items-center space-x-2">
+                <img src={logoDark} alt="SvelteKit Logo" class="h-8 w-auto dark:hidden" />
+                <img src={logoDark} alt="SvelteKit Logo" class="hidden h-8 w-auto dark:block" />
+            </a>
+        </div>
 
-		<!-- Desktop Navigation -->
-		<nav class="hidden items-center justify-between gap-2 md:flex">
-			{#each navItems as item}
-				<a
-					href={item.href}
-					class="ring-offset-background relative inline-flex cursor-pointer items-center justify-center gap-2 rounded-4xl px-3 py-1 font-medium tracking-normal whitespace-nowrap text-gray-500 transition-colors duration-300 hover:text-gray-300 focus:text-white focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 dark:hover:text-white
-							{page.url.pathname === item.href ? 'text-white' : ''}"
-				>
-					{item.label}
-				</a>
-			{/each}
-		</nav>
+        <!-- Desktop Navigation -->
+        <nav class="hidden items-center justify-between gap-2 md:flex">
+            {#each navItems as item}
+                <a
+                    href={item.href}
+                    class="ring-offset-background relative inline-flex cursor-pointer items-center justify-center gap-2 rounded-4xl px-3 py-1 font-medium tracking-normal whitespace-nowrap text-gray-500 transition-colors duration-300 hover:text-gray-300 focus:text-white focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 dark:hover:text-white
+                            {page.url.pathname === item.href ? 'text-white' : ''}"
+                >
+                    {item.label}
+                </a>
+            {/each}
+        </nav>
 
-		<!-- Desktop CTA Button -->
-		<div
-			class="block rounded-3xl bg-white px-3 py-1 no-underline outline-none hover:bg-gray-300 hover:no-underline"
-		>
-			<button class="text-base tracking-normal text-black transition-colors duration-300">
-				Members Area
-			</button>
-		</div>
+        <!-- Desktop Actions -->
+        <div class="hidden md:flex items-center space-x-4">
+            <CartButton />
+            <div class="rounded-3xl bg-white px-3 py-1 no-underline outline-none hover:bg-gray-300 hover:no-underline">
+                <button class="text-base tracking-normal text-black transition-colors duration-300">
+                    Members Area
+                </button>
+            </div>
+        </div>
 
-		<!-- Mobile menu button -->
-		<div class="flex md:hidden">
-			<button
-				class="ring-offset-background focus-visible:ring-ring hover:text-accent hover:border-accent relative inline-flex cursor-pointer items-center justify-center gap-2 rounded-4xl border border-gray-500 p-2 font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
-				onclick={toggleMobileMenu}
-				aria-haspopup="menu"
-				aria-expanded={mobileMenuOpen}
-				aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-				type="button"
-			>
-				<svg
+        <!-- Mobile menu button -->
+        <div class="flex md:hidden items-center space-x-2">
+            <CartButton />
+            
+            <button
+                class="ring-offset-background focus-visible:ring-ring hover:text-accent hover:border-accent relative inline-flex cursor-pointer items-center justify-center gap-2 rounded-4xl border border-gray-500 p-2 font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+                onclick={toggleMobileMenu}
+                aria-haspopup="menu"
+                aria-expanded={mobileMenuOpen}
+                aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                type="button"
+            >
+                <svg
 					width="18"
 					height="18"
 					viewBox="0 0 24 24"
@@ -117,12 +121,12 @@
 					>
 					</line>
 				</svg>
-			</button>
-		</div>
-	</div>
+            </button>
+        </div>
+    </div>
 
-	<!-- Mobile Navigation Menu -->
-	{#if mobileMenuOpen}
+    <!-- Mobile Navigation Menu -->
+    {#if mobileMenuOpen}
 		<div
 			id="bits-16"
 			data-bits-floating-content-wrapper=""

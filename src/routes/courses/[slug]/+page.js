@@ -5,97 +5,100 @@ function createSlug(title) {
     return title
         .toLowerCase()
         .trim()
-        .replace(/[^\w\s-]/g, '') 
-        .replace(/[\s_-]+/g, '-') 
-        .replace(/^-+|-+$/g, ''); 
+        .replace(/[^\w\s-]/g, '') // Remove special characters
+        .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
+        .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
 }
 
-// Helper function to find course by slug
-function findCourseBySlug(courses, targetSlug) {
-    return courses.find((course) => {
-        const courseSlug = createSlug(course.title);
-        return courseSlug === targetSlug;
-    });
-}
-
+// Helper function để tạo random category
 function getRandomCategory() {
-    const categories = [
-        'Frontend Development',
-        'Backend Development',
-        'Full Stack',
-        'Mobile Development'
-    ];
+    const categories = ['frontend', 'backend', 'se'];
     return categories[Math.floor(Math.random() * categories.length)];
 }
 
+// Helper function để tạo random instructor
+function getRandomInstructor() {
+    const instructors = ['Mosh Hamedani', 'John Smith', 'Sarah Johnson', 'Mike Chen', 'Emily Davis'];
+    return instructors[Math.floor(Math.random() * instructors.length)];
+}
+
+// Helper function để tạo random price
+function getRandomPrice() {
+    const prices = ['$49.99', '$79.99', '$99.99', '$129.99', '$149.99'];
+    const originalPrices = ['$99.99', '$149.99', '$199.99', '$249.99', '$299.99'];
+    const index = Math.floor(Math.random() * prices.length);
+    return {
+        price: prices[index],
+        originalPrice: originalPrices[index]
+    };
+}
+
 export async function load({ params, fetch }) {
-    const { slug } = params;
-    
     try {
-        // Fetch all courses from external API
+        // Fetch course data from API based on slug
         const response = await fetch('https://jsonplaceholder.typicode.com/posts');
         
         if (!response.ok) {
-            throw error(500, 'Failed to fetch courses');
+            throw new Error('Failed to fetch course');
         }
         
         const posts = await response.json();
         
-        // Transform all posts to courses with slugs
-        const allCourses = posts.map((post) => ({
-            id: post.id,
-            title: post.title,
-            slug: createSlug(post.title),
-            description: post.body,
-            fullDescription: `${post.body} This comprehensive course will take you from beginner to advanced level. You'll learn industry best practices, work on real-world projects, and gain the skills needed to succeed in your development career.`,
-            imageSrc: `https://picsum.photos/800/400?random=${post.id}`,
-            imageAlt: post.title,
-            instructor: 'Mosh Hamedani',
-            instructorAvatar: 'https://picsum.photos/64/64?random=instructor',
-            duration: '8.5 hours',
-            lessonsCount: '42 lessons',
-            level: 'Beginner to Advanced',
-            lastUpdated: 'December 2024',
-            rating: 4.8,
-            studentsCount: '12,543',
-            price: '$89',
-            originalPrice: '$129',
-            category: getRandomCategory(),
-            skills: [
-                'Core fundamentals',
-                'Best practices',
-                'Real-world projects',
-                'Industry standards',
-                'Problem solving'
-            ]
-        }));
+        // Find course by slug (simulate finding by slug)
+        const coursePost = posts.find(post => createSlug(post.title) === params.slug) || posts[0];
         
-        // Find course by slug
-        const course = findCourseBySlug(allCourses, slug);
-        
-        if (!course) {
-            throw error(404, 'Course not found');
+        if (!coursePost) {
+            throw new Error('Course not found');
         }
         
-        // Get related courses (excluding current course)
-        const relatedCourses = allCourses
-            .filter((c) => c.id !== course.id)
-            .slice(0, 3)
-            .map((c) => ({
-                id: c.id,
-                href: `/courses/${c.slug}`,
-                imageSrc: `https://picsum.photos/300/200?random=${c.id}`,
-                imageAlt: c.title,
-                title: c.title,
-                description: c.description.substring(0, 100) + '...'
-            }));
+        const pricing = getRandomPrice();
+        
+        // Transform data to match course detail requirements
+        const course = {
+            id: coursePost.id,
+            slug: params.slug,
+            title: coursePost.title,
+            description: coursePost.body,
+            imageSrc: `https://picsum.photos/800/450?random=${coursePost.id}`,
+            imageAlt: coursePost.title,
+            category: getRandomCategory(),
+            instructor: getRandomInstructor(),
+            price: pricing.price,
+            originalPrice: pricing.originalPrice,
+            rating: (4.0 + Math.random()).toFixed(1),
+            students: Math.floor(Math.random() * 50000) + 1000,
+            duration: Math.floor(Math.random() * 40) + 5 + ' hours',
+            level: ['Beginner', 'Intermediate', 'Advanced'][Math.floor(Math.random() * 3)],
+            language: 'English',
+            lastUpdated: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toLocaleDateString(),
+            href: `/courses/${params.slug}`
+        };
+        
+        // Get related courses
+        const relatedCourses = posts.slice(1, 4).map(post => {
+            const relatedPricing = getRandomPrice();
+            return {
+                id: post.id,
+                href: `/courses/${createSlug(post.title)}`,
+                slug: createSlug(post.title),
+                imageSrc: `https://picsum.photos/400/250?random=${post.id}`,
+                imageAlt: post.title,
+                title: post.title,
+                description: post.body.substring(0, 100) + '...',
+                category: getRandomCategory(),
+                instructor: getRandomInstructor(),
+                price: relatedPricing.price,
+                originalPrice: relatedPricing.originalPrice
+            };
+        });
         
         return {
             course,
             relatedCourses
         };
         
-    } catch (err) {
-        throw error(500, 'Failed to load course details');
+    } catch (error) {
+        console.error('Load Error:', error);
+        throw error;
     }
 }

@@ -2,60 +2,87 @@
     import { page } from '$app/stores';
     import { goto } from '$app/navigation';
     import CourseCard from '$lib/components/CourseCard.svelte';
+    import { cart, addToCart, removeFromCart } from '$lib/stores/cart';
     
     // Get data from load function
     export let data;
     
     $: ({ course, relatedCourses } = data);
+    $: isInCart = $cart.some(item => item.id === course.id);
     
-    let expandedModules = new Set();
-    
+    // Course modules data
     const courseModules = [
         {
             id: 1,
             title: 'Getting Started',
             lessons: [
-                { id: 1, title: 'Introduction', duration: '5:30', completed: false },
-                { id: 2, title: 'Setting Up Development Environment', duration: '12:45', completed: false },
-                { id: 3, title: 'Your First Project', duration: '18:20', completed: false }
+                'Introduction to the Course',
+                'Setting up Development Environment',
+                'First Steps',
+                'Course Resources'
             ]
         },
         {
             id: 2,
-            title: 'Core Concepts',
+            title: 'Fundamentals',
             lessons: [
-                { id: 4, title: 'Understanding the Fundamentals', duration: '25:15', completed: false },
-                { id: 5, title: 'Working with Components', duration: '22:30', completed: false },
-                { id: 6, title: 'State Management', duration: '19:45', completed: false }
+                'Core Concepts',
+                'Basic Syntax',
+                'Working with Variables',
+                'Control Structures',
+                'Functions and Methods'
             ]
         },
         {
             id: 3,
             title: 'Advanced Topics',
             lessons: [
-                { id: 7, title: 'Advanced Patterns', duration: '28:10', completed: false },
-                { id: 8, title: 'Performance Optimization', duration: '24:35', completed: false },
-                { id: 9, title: 'Deployment', duration: '16:50', completed: false }
+                'Advanced Patterns',
+                'Best Practices',
+                'Performance Optimization',
+                'Error Handling',
+                'Testing Strategies'
+            ]
+        },
+        {
+            id: 4,
+            title: 'Real-World Projects',
+            lessons: [
+                'Project Planning',
+                'Building the Application',
+                'Database Integration',
+                'Deployment',
+                'Maintenance and Updates'
             ]
         }
     ];
     
-    function enrollInCourse() {
-        alert(`Enrolling in: ${course.title}`);
-    }
+    let expandedModules = new Set();
     
-    function addToWishlist() {
-        alert(`Added "${course.title}" to wishlist`);
-    }
-    
-    // Toggle module expansion
     function toggleModule(moduleId) {
+        expandedModules = new Set(expandedModules);
         if (expandedModules.has(moduleId)) {
             expandedModules.delete(moduleId);
         } else {
             expandedModules.add(moduleId);
         }
-        expandedModules = expandedModules; // Trigger reactivity
+    }
+    
+    function enrollInCourse() {
+        alert(`Enrolling in: ${course.title}`);
+        // Implement enrollment logic here
+    }
+    
+    function handleCartToggle() {
+        if (isInCart) {
+            removeFromCart(course.id);
+        } else {
+            addToCart(course);
+        }
+    }
+    
+    function goBackToCourses() {
+        goto('/courses');
     }
 </script>
 
@@ -73,75 +100,114 @@
                 <!-- Course Info -->
                 <div>
                     <!-- Breadcrumb -->
-                    <nav class="mb-4 text-sm">
-                        <a href="/courses" class="text-violet-400 hover:text-violet-300">Courses</a>
-                        <span class="mx-2 text-gray-400">›</span>
-                        <span class="text-gray-300">{course.category}</span>
-                        <span class="mx-2 text-gray-400">›</span>
-                        <span class="text-gray-400">{course.title}</span>
+                    <nav class="mb-6 text-sm">
+                        <div class="flex items-center space-x-2 text-gray-400">
+                            <button 
+                                on:click={goBackToCourses}
+                                class="hover:text-violet-400 transition-colors"
+                            >
+                                Courses
+                            </button>
+                            <span>/</span>
+                            <span class="text-gray-300">{course.category}</span>
+                            <span>/</span>
+                            <span class="text-white">{course.title}</span>
+                        </div>
                     </nav>
 
-                    <h1 class="mb-4 text-4xl leading-tight font-bold lg:text-5xl">{course.title}</h1>
-                    <p class="mb-6 text-xl text-gray-300">{course.description}</p>
+                    <!-- Course Title -->
+                    <h1 class="mb-4 text-4xl font-bold text-white lg:text-5xl">
+                        {course.title}
+                    </h1>
 
                     <!-- Course Meta -->
-                    <div class="mb-6 flex flex-wrap gap-4">
-                        <div class="flex items-center space-x-2">
-                            <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                                />
+                    <div class="mb-6 flex flex-wrap items-center gap-4 text-sm text-gray-300">
+                        <div class="flex items-center space-x-1">
+                            <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                             </svg>
-                            <span class="font-semibold">{course.rating}</span>
-                            <span class="text-gray-400">({course.studentsCount} students)</span>
+                            <span>{course.rating}</span>
                         </div>
-                        <div class="text-gray-400">
-                            {course.duration} • {course.lessonsCount}
-                        </div>
-                        <div class="text-gray-400">
-                            {course.level}
-                        </div>
+                        <span>•</span>
+                        <span>{course.students.toLocaleString()} students</span>
+                        <span>•</span>
+                        <span>{course.duration}</span>
+                        <span>•</span>
+                        <span>{course.level}</span>
                     </div>
 
                     <!-- Instructor -->
                     <div class="mb-6 flex items-center space-x-3">
-                        <img
-                            src={course.instructorAvatar}
+                        <img 
+                            src={`https://i.pravatar.cc/60?u=${course.instructor}`} 
                             alt={course.instructor}
                             class="h-12 w-12 rounded-full"
                         />
                         <div>
-                            <p class="font-semibold">Created by</p>
-                            <p class="text-violet-400">{course.instructor}</p>
+                            <p class="text-sm text-gray-400">Created by</p>
+                            <p class="font-semibold text-white">{course.instructor}</p>
                         </div>
                     </div>
 
-                    <!-- Price and CTA -->
-                    <div class="mb-6 flex items-center space-x-4">
+                    <!-- Pricing -->
+                    <div class="mb-8 flex items-center space-x-4">
                         <span class="text-3xl font-bold text-green-400">{course.price}</span>
-                        <span class="text-lg text-gray-400 line-through">{course.originalPrice}</span>
-                        <span class="rounded bg-green-600 px-2 py-1 text-sm text-white">31% off</span>
+                        <span class="text-xl text-gray-400 line-through">{course.originalPrice}</span>
+                        <span class="rounded-full bg-red-500 px-3 py-1 text-sm font-semibold text-white">
+                            50% OFF
+                        </span>
                     </div>
 
+                    <!-- CTA Buttons -->
                     <div class="flex flex-col gap-3 sm:flex-row">
                         <button
-                            class="rounded-full bg-violet-500 px-8 py-3 font-semibold text-white transition-colors hover:bg-violet-600"
+                            class="rounded-full bg-violet-500 px-8 py-3 font-semibold text-white transition-all duration-300 hover:bg-violet-600 hover:scale-105 active:scale-95"
                             on:click={enrollInCourse}
                         >
                             Enroll Now
                         </button>
+                        
+                        <!-- Simple Cart Button -->
                         <button
-                            class="rounded-full border border-gray-600 px-8 py-3 font-semibold text-white transition-colors hover:border-gray-500"
-                            on:click={addToWishlist}
+                            class="flex items-center justify-center space-x-2 rounded-full px-8 py-3 font-semibold {isInCart 
+                                ? 'border-2 border-green-600 bg-green-600 text-white hover:bg-green-700' 
+                                : 'border-2 border-gray-600 text-white hover:border-violet-500'}"
+                            on:click={handleCartToggle}
                         >
-                            Add to Wishlist
+                            <!-- Icon -->
+                            {#if isInCart}
+                                <svg 
+                                    class="w-5 h-5" 
+                                    fill="currentColor" 
+                                    viewBox="0 0 20 20"
+                                >
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                            {:else}
+                                <svg 
+                                    class="w-5 h-5" 
+                                    fill="currentColor" 
+                                    viewBox="0 0 20 20"
+                                >
+                                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                                </svg>
+                            {/if}
+                            
+                            <!-- Text -->
+                            <span>
+                                {isInCart ? 'In Cart' : 'Add to Cart'}
+                            </span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Course Image -->
-                <div class="lg:order-last">
-                    <img src={course.imageSrc} alt={course.imageAlt} class="w-full rounded-lg shadow-2xl" />
+                <div class="order-first lg:order-last">
+                    <img 
+                        src={course.imageSrc} 
+                        alt={course.imageAlt}
+                        class="w-full rounded-lg shadow-2xl"
+                    />
                 </div>
             </div>
         </div>
@@ -149,97 +215,76 @@
 
     <!-- Course Content -->
     <div class="container mx-auto px-4 py-16">
-        <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div class="grid grid-cols-1 gap-12 lg:grid-cols-3">
             <!-- Main Content -->
             <div class="lg:col-span-2">
-                <!-- What you'll learn -->
+                <!-- Course Description -->
                 <section class="mb-12">
-                    <h2 class="mb-6 text-2xl font-bold">What you'll learn</h2>
-                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        {#each course.skills as skill}
-                            <div class="flex items-start space-x-3">
-                                <svg
-                                    class="mt-0.5 h-5 w-5 text-green-400"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
+                    <h2 class="mb-6 text-3xl font-bold text-white">About This Course</h2>
+                    <div class="prose prose-lg prose-invert max-w-none">
+                        <p class="text-gray-300 leading-relaxed">
+                            {course.description}
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            This comprehensive course will take you from beginner to advanced level, covering all the essential concepts and practical applications. You'll build real-world projects and gain hands-on experience that will prepare you for your career.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Course Curriculum -->
+                <section class="mb-12">
+                    <h2 class="mb-6 text-3xl font-bold text-white">Course Curriculum</h2>
+                    <div class="space-y-4">
+                        {#each courseModules as module}
+                            <div class="rounded-lg border border-gray-700 bg-gray-800">
+                                <button
+                                    class="flex w-full items-center justify-between p-6 text-left transition-colors hover:bg-gray-750"
+                                    on:click={() => toggleModule(module.id)}
                                 >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
-                                <span>{skill}</span>
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-white">{module.title}</h3>
+                                        <p class="text-sm text-gray-400">{module.lessons.length} lessons</p>
+                                    </div>
+                                    <svg 
+                                        class="h-5 w-5 text-gray-400 transition-transform {expandedModules.has(module.id) ? 'rotate-180' : ''}" 
+                                        fill="currentColor" 
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                
+                                {#if expandedModules.has(module.id)}
+                                    <div 
+                                        class="border-t border-gray-700 px-6 pb-6"
+                                    >
+                                        <ul class="mt-4 space-y-3">
+                                            {#each module.lessons as lesson}
+                                                <li class="flex items-center space-x-3">
+                                                    <svg class="h-4 w-4 text-violet-400" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                                                    </svg>
+                                                    <span class="text-gray-300">{lesson}</span>
+                                                </li>
+                                            {/each}
+                                        </ul>
+                                    </div>
+                                {/if}
                             </div>
                         {/each}
                     </div>
                 </section>
 
-                <!-- Course Description -->
+                <!-- What You'll Learn -->
                 <section class="mb-12">
-                    <h2 class="mb-6 text-2xl font-bold">Course Description</h2>
-                    <div class="prose max-w-none prose-invert">
-                        <p class="leading-relaxed text-gray-300">{course.fullDescription}</p>
-                    </div>
-                </section>
-
-                <!-- Course Content -->
-                <section class="mb-12">
-                    <h2 class="mb-6 text-2xl font-bold">Course Content</h2>
-                    <div class="space-y-4">
-                        {#each courseModules as module, moduleIndex}
-                            <div class="rounded-lg border border-gray-700">
-                                <button
-                                    class="hover:bg-gray-750 w-full rounded-t-lg bg-gray-800 px-6 py-4 text-left transition-colors"
-                                    on:click={() => toggleModule(module.id)}
-                                >
-                                    <div class="flex items-center justify-between">
-                                        <h3 class="font-semibold">Module {moduleIndex + 1}: {module.title}</h3>
-                                        <div class="flex items-center space-x-4">
-                                            <span class="text-sm text-gray-400">{module.lessons.length} lessons</span>
-                                            <svg
-                                                class="h-5 w-5 transform transition-transform {expandedModules.has(
-                                                    module.id
-                                                )
-                                                    ? 'rotate-180'
-                                                    : ''}"
-                                                fill="currentColor"
-                                                viewBox="0 0 20 20"
-                                            >
-                                                <path
-                                                    fill-rule="evenodd"
-                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                    clip-rule="evenodd"
-                                                />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </button>
-                                {#if expandedModules.has(module.id)}
-                                    <div class="px-6 pb-4">
-                                        {#each module.lessons as lesson}
-                                            <div
-                                                class="flex items-center justify-between border-b border-gray-700 py-2 last:border-b-0"
-                                            >
-                                                <div class="flex items-center space-x-3">
-                                                    <svg
-                                                        class="h-4 w-4 text-gray-400"
-                                                        fill="currentColor"
-                                                        viewBox="0 0 20 20"
-                                                    >
-                                                        <path
-                                                            fill-rule="evenodd"
-                                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                                                            clip-rule="evenodd"
-                                                        />
-                                                    </svg>
-                                                    <span class="text-sm">{lesson.title}</span>
-                                                </div>
-                                                <span class="text-sm text-gray-400">{lesson.duration}</span>
-                                            </div>
-                                        {/each}
-                                    </div>
-                                {/if}
+                    <h2 class="mb-6 text-3xl font-bold text-white">What You'll Learn</h2>
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        {#each ['Master the fundamentals', 'Build real-world projects', 'Industry best practices', 'Advanced techniques', 'Problem-solving skills', 'Professional development'] as item}
+                            <div class="flex items-start space-x-3">
+                                <svg class="mt-1 h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                                <span class="text-gray-300">{item}</span>
                             </div>
                         {/each}
                     </div>
@@ -258,43 +303,89 @@
                                 <span class="text-lg text-gray-400 line-through">{course.originalPrice}</span>
                             </div>
                             <button
-                                class="mb-3 w-full rounded-full bg-violet-500 py-3 font-semibold text-white transition-colors hover:bg-violet-600"
+                                class="mb-3 w-full rounded-full bg-violet-500 py-3 font-semibold text-white transition-all duration-300 hover:bg-violet-600 hover:scale-105 active:scale-95"
                                 on:click={enrollInCourse}
                             >
                                 Enroll Now
                             </button>
+                            
+                            <!-- Sidebar Cart Button (same animation as hero) -->
                             <button
-                                class="w-full rounded-full border border-gray-600 py-3 font-semibold text-white transition-colors hover:border-gray-500"
-                                on:click={addToWishlist}
+                                class="group relative w-full overflow-hidden rounded-full py-3 font-semibold transition-all duration-500 ease-out {isInCart 
+                                    ? 'bg-green-600 text-white border-2 border-green-600 hover:bg-green-700 hover:border-green-700' 
+                                    : 'border-2 border-gray-600 text-white hover:border-violet-500 hover:bg-violet-500/10'} 
+                                    active:scale-95"
+                                on:click={handleCartToggle}
                             >
-                                Add to Wishlist
+                                <!-- Background animation -->
+                                <div class="absolute inset-0 rounded-full transition-all duration-500 {isInCart 
+                                    ? 'bg-gradient-to-r from-green-600 to-green-500' 
+                                    : 'bg-gradient-to-r from-transparent to-transparent group-hover:from-violet-500/20 group-hover:to-pink-500/20'}">
+                                </div>
+                                
+                                <!-- Content wrapper -->
+                                <div class="relative flex items-center justify-center space-x-2">
+                                    <!-- Icon with smooth transition -->
+                                    <div class="transition-transform duration-300">
+                                        {#if isInCart}
+                                            <svg 
+                                                class="w-5 h-5" 
+                                                fill="currentColor" 
+                                                viewBox="0 0 20 20"
+                                            >
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                            </svg>
+                                        {:else}
+                                            <svg 
+                                                class="w-5 h-5" 
+                                                fill="currentColor" 
+                                                viewBox="0 0 20 20"
+                                            >
+                                                <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                                            </svg>
+                                        {/if}
+                                    </div>
+                                    
+                                    <!-- Text with smooth transition -->
+                                    <span class="transition-all duration-300">
+                                        {#if isInCart}
+                                            <span>
+                                                In Cart
+                                            </span>
+                                        {:else}
+                                            <span>
+                                                Add to Cart
+                                            </span>
+                                        {/if}
+                                    </span>
+                                </div>
                             </button>
                         </div>
                     </div>
 
                     <!-- Course Info -->
                     <div class="rounded-lg bg-gray-800 p-6">
-                        <h3 class="mb-4 font-bold">Course Info</h3>
-                        <div class="space-y-3 text-sm">
+                        <h3 class="mb-4 text-lg font-semibold text-white">Course Information</h3>
+                        <div class="space-y-3">
                             <div class="flex justify-between">
                                 <span class="text-gray-400">Duration:</span>
-                                <span>{course.duration}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-400">Lessons:</span>
-                                <span>{course.lessonsCount}</span>
+                                <span class="text-white">{course.duration}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-400">Level:</span>
-                                <span>{course.level}</span>
+                                <span class="text-white">{course.level}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-400">Category:</span>
-                                <span>{course.category}</span>
+                                <span class="text-gray-400">Language:</span>
+                                <span class="text-white">{course.language}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-400">Last Updated:</span>
-                                <span>{course.lastUpdated}</span>
+                                <span class="text-white">{course.lastUpdated}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Students:</span>
+                                <span class="text-white">{course.students.toLocaleString()}</span>
                             </div>
                         </div>
                     </div>
@@ -304,13 +395,14 @@
     </div>
 
     <!-- Related Courses -->
-    {#if relatedCourses.length > 0}
+    {#if relatedCourses && relatedCourses.length > 0}
         <div class="bg-background py-16">
             <div class="container mx-auto px-4">
-                <h2 class="mb-8 text-center text-3xl font-bold">More Courses You Might Like</h2>
+                <h2 class="mb-12 text-center text-3xl font-bold text-white">Related Courses</h2>
                 <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
                     {#each relatedCourses as relatedCourse}
                         <CourseCard
+                            id={relatedCourse.id}
                             href={relatedCourse.href}
                             imageSrc={relatedCourse.imageSrc}
                             imageAlt={relatedCourse.imageAlt}
