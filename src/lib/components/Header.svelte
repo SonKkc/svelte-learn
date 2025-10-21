@@ -22,7 +22,6 @@
 		mobileMenuOpen = false;
 	}
 
-	
 	$effect(() => {
 		if (typeof document !== 'undefined') {
 			if (mobileMenuOpen) {
@@ -35,51 +34,83 @@
 </script>
 
 <header class="font-heading text-foreground sticky top-0 z-50 w-full bg-black/80 backdrop-blur-md">
-    <div class="mx-auto flex max-w-7xl items-center justify-between px-3 py-2 md:py-4 lg:px-6">
-        <!-- Logo -->
-        <div class="flex items-center">
-            <a href="/" class="flex items-center space-x-2">
-                <img src={logoDark} alt="SvelteKit Logo" class="h-8 w-auto dark:hidden" />
-                <img src={logoDark} alt="SvelteKit Logo" class="hidden h-8 w-auto dark:block" />
-            </a>
-        </div>
+	<div class="mx-auto flex max-w-7xl items-center justify-between px-3 py-2 md:py-4 lg:px-6">
+		<!-- Logo -->
+		<div class="flex items-center">
+			<a href="/"
+				class="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+				type="button"
+				aria-label="Go to home page"
+			>
+				<img src={logoDark} alt="SvelteKit Logo" class="h-8 w-auto dark:hidden" />
+				<img src={logoDark} alt="SvelteKit Logo" class="hidden h-8 w-auto dark:block" />
+			</a>
+		</div>
 
-        <!-- Desktop Navigation -->
-        <nav class="hidden items-center justify-between gap-2 md:flex">
-            {#each navItems as item}
-                <a
-                    href={item.href}
-                    class="ring-offset-background relative inline-flex cursor-pointer items-center justify-center gap-2 rounded-4xl px-3 py-1 font-medium tracking-normal whitespace-nowrap text-gray-500 transition-colors duration-300 hover:text-gray-300 focus:text-white focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 dark:hover:text-white
+		<!-- Desktop Navigation -->
+		<nav class="hidden items-center justify-between gap-2 md:flex">
+			{#each navItems as item}
+				<a href="{item.href}"
+					class="ring-offset-background relative inline-flex cursor-pointer items-center justify-center gap-2 rounded-4xl px-3 py-1 font-medium tracking-normal whitespace-nowrap text-gray-500 transition-colors duration-300 hover:text-gray-300 focus:text-white focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 dark:hover:text-white
                             {page.url.pathname === item.href ? 'text-white' : ''}"
-                >
-                    {item.label}
-                </a>
-            {/each}
-        </nav>
+					type="button"
+					aria-label="Navigate to {item.label}"
+				>
+					{item.label}
+				</a>
+			{/each}
+		</nav>
 
-        <!-- Desktop Actions -->
-        <div class="hidden md:flex items-center space-x-4">
-            <CartButton />
-            <div class="rounded-3xl bg-white px-3 py-1 no-underline outline-none hover:bg-gray-300 hover:no-underline">
-                <button class="text-base tracking-normal text-black transition-colors duration-300">
-                    Members Area
-                </button>
-            </div>
-        </div>
+		<!-- Desktop Actions -->
+		<div class="hidden items-center space-x-4 md:flex">
+			<CartButton />
+			<div
+				class="rounded-3xl bg-white px-3 py-1 no-underline outline-none hover:bg-gray-300 hover:no-underline"
+			>
+				<button class="text-base tracking-normal text-black transition-colors duration-300">
+					Members Area
+				</button>
+			</div>
+		</div>
 
-        <!-- Mobile menu button -->
-        <div class="flex md:hidden items-center space-x-2">
-            <CartButton />
-            
-            <button
-                class="ring-offset-background focus-visible:ring-ring hover:text-accent hover:border-accent relative inline-flex cursor-pointer items-center justify-center gap-2 rounded-4xl border border-gray-500 p-2 font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
-                onclick={toggleMobileMenu}
-                aria-haspopup="menu"
-                aria-expanded={mobileMenuOpen}
-                aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-                type="button"
-            >
-                <svg
+		<div class="flex items-center gap-3">
+			<a href="/logout" 
+				aria-label="Sign Out" 
+				title="Sign Out"
+				class="hover:opacity-80 transition-opacity"
+				type="button"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="icon icon-tabler icons-tabler-outline icon-tabler-logout"
+					><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path
+						d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"
+					/><path d="M9 12h12l-3 -3" /><path d="M18 15l3 -3" /></svg
+				>
+			</a>
+		</div>
+
+		<!-- Mobile menu button -->
+		<div class="flex items-center space-x-2 md:hidden">
+			<CartButton />
+
+			<button
+				class="ring-offset-background focus-visible:ring-ring hover:text-accent hover:border-accent relative inline-flex cursor-pointer items-center justify-center gap-2 rounded-4xl border border-gray-500 p-2 font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+				onclick={toggleMobileMenu}
+				aria-haspopup="menu"
+				aria-expanded={mobileMenuOpen}
+				aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+				type="button"
+			>
+				<svg
 					width="18"
 					height="18"
 					viewBox="0 0 24 24"
@@ -121,12 +152,12 @@
 					>
 					</line>
 				</svg>
-            </button>
-        </div>
-    </div>
+			</button>
+		</div>
+	</div>
 
-    <!-- Mobile Navigation Menu -->
-    {#if mobileMenuOpen}
+	<!-- Mobile Navigation Menu -->
+	{#if mobileMenuOpen}
 		<div
 			id="bits-16"
 			data-bits-floating-content-wrapper=""
@@ -134,7 +165,6 @@
 			style="position: fixed; left: 0px; top: 0px; transform: translate(0px, 50px); will-change: transform; min-width: max-content; z-index: 50; --bits-floating-transform-origin: 50% 0px; --bits-floating-available-width: 342px; --bits-floating-available-height: 457px; --bits-floating-anchor-width: 34px; --bits-floating-anchor-height: 34px; pointer-events: auto;"
 		>
 			<div
-				forcemount="false"
 				class="bg-background rounded-0 top-full z-50 h-screen w-screen max-w-full overflow-hidden p-3 shadow-md"
 				role="menu"
 				aria-orientation="vertical"
@@ -153,14 +183,14 @@
 						aria-disabled="false"
 						data-dropdown-menu-item=""
 					>
-						<a
-							class="font-heading data-[active=true]:text-accent block w-full font-bold text-gray-400 hover:text-gray-100 focus:outline-0"
-							href={item.href}
-							onclick={closeMobileMenu}
+						<button
+							class="font-heading data-[active=true]:text-accent block w-full font-bold text-gray-400 hover:text-gray-100 focus:outline-0 text-left"
 							data-active={page.url.pathname === item.href ? 'true' : 'false'}
+							type="button"
+							aria-label="Navigate to {item.label}"
 						>
 							{item.label}
-						</a>
+						</button>
 					</div>
 				{/each}
 
