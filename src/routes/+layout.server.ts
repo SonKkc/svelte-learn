@@ -2,7 +2,7 @@
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ locals, url }) {
-	const publicRoutes = ['/login', '/create', '/forgot', '/change'];
+	const publicRoutes = ['/login', '/create', '/forgot', '/change', '/register'];
 
 	if (!locals.user_id && !publicRoutes.includes(url.pathname)) {
 		throw redirect(303, '/login');

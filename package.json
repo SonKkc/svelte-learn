@@ -30,7 +30,9 @@
 		"vite": "^7.0.4"
 	},
 	"dependencies": {
+		"@types/nodemailer": "^7.0.2",
 		"@types/pg": "^8.15.5",
+		"nodemailer": "^7.0.9",
 		"pg": "^8.16.3"
 	}
 }

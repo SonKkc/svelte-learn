@@ -123,6 +123,7 @@
 						/>
 						<button
 							type="button"
+                            aria-label="show password"
 							class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-300"
 						>
 							<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">

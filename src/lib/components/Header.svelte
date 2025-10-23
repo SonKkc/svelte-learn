@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import logoDark from '$lib/assets/logo-white.png';
 	import CartButton from '$lib/components/CartButton.svelte';
+   
 
 	// Navigation items
 	const navItems = [
@@ -37,8 +38,9 @@
 	<div class="mx-auto flex max-w-7xl items-center justify-between px-3 py-2 md:py-4 lg:px-6">
 		<!-- Logo -->
 		<div class="flex items-center">
-			<a href="/"
-				class="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+			<a
+				href="/"
+				class="flex items-center space-x-2 transition-opacity hover:opacity-80"
 				type="button"
 				aria-label="Go to home page"
 			>
@@ -50,7 +52,8 @@
 		<!-- Desktop Navigation -->
 		<nav class="hidden items-center justify-between gap-2 md:flex">
 			{#each navItems as item}
-				<a href="{item.href}"
+				<a
+					href={item.href}
 					class="ring-offset-background relative inline-flex cursor-pointer items-center justify-center gap-2 rounded-4xl px-3 py-1 font-medium tracking-normal whitespace-nowrap text-gray-500 transition-colors duration-300 hover:text-gray-300 focus:text-white focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 dark:hover:text-white
                             {page.url.pathname === item.href ? 'text-white' : ''}"
 					type="button"
@@ -74,27 +77,27 @@
 		</div>
 
 		<div class="flex items-center gap-3">
-			<a href="/logout" 
-				aria-label="Sign Out" 
+			<a
+				href="/logout"
+				aria-label="Sign Out"
 				title="Sign Out"
-				class="hover:opacity-80 transition-opacity"
+				class="transition-opacity hover:opacity-80"
 				type="button"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
 					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
 					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="icon icon-tabler icons-tabler-outline icon-tabler-logout"
-					><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path
-						d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"
-					/><path d="M9 12h12l-3 -3" /><path d="M18 15l3 -3" /></svg
+					class="size-6"
 				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+					/>
+				</svg>
 			</a>
 		</div>
 
@@ -184,7 +187,7 @@
 						data-dropdown-menu-item=""
 					>
 						<button
-							class="font-heading data-[active=true]:text-accent block w-full font-bold text-gray-400 hover:text-gray-100 focus:outline-0 text-left"
+							class="font-heading data-[active=true]:text-accent block w-full text-left font-bold text-gray-400 hover:text-gray-100 focus:outline-0"
 							data-active={page.url.pathname === item.href ? 'true' : 'false'}
 							type="button"
 							aria-label="Navigate to {item.label}"
