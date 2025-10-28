@@ -1,6 +1,15 @@
-<script>
+<script lang="ts">
 	import { enhance } from '$app/forms';
-	let { form } = $props();
+	import { onMount } from 'svelte';
+	export let form: any;
+
+	let url = '';
+
+	onMount(async () => {
+		const resp = await fetch('../../api/google/url');
+		const json = await resp.json();
+		url = json.url;
+	});
 </script>
 
 <svelte:head>
@@ -34,9 +43,9 @@
 		<div class="rounded-2xl border border-gray-700 bg-gray-800/50 p-8 shadow-2xl backdrop-blur-sm">
 			<!-- Social Login Buttons -->
 			<div class="mb-6 space-y-3">
-				<button
+				<a href={url} id="google-login-button"
 					type="button"
-					class="flex w-full items-center justify-center space-x-3 rounded-xl bg-white px-4 py-3 font-semibold text-gray-900 transition-all duration-200 hover:scale-105 hover:bg-gray-100"
+					class="flex w-full items-center justify-center space-x-3 rounded-xl bg-white px-4 py-3 font-semibol transition-all duration-200 hover:scale-105 hover:bg-gray-100"
 				>
 					<svg class="h-5 w-5" viewBox="0 0 24 24">
 						<path
@@ -56,8 +65,8 @@
 							d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
 						/>
 					</svg>
-					<span>Continue with Google</span>
-				</button>
+					<span class="!text-gray-900">Continue with Google</span>
+				</a>
 
 				<button
 					type="button"

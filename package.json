@@ -32,6 +32,7 @@
 	"dependencies": {
 		"@types/nodemailer": "^7.0.2",
 		"@types/pg": "^8.15.5",
+		"googleapis": "^164.1.0",
 		"nodemailer": "^7.0.9",
 		"pg": "^8.16.3"
 	}

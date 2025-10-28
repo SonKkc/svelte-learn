@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import CTAButtons from '$lib/components/shared/CTAButtons.svelte';
 	import HeroSection from '$lib/components/home/HeroSection.svelte';
     import IntroSection from '$lib/components/home/IntroSection.svelte';

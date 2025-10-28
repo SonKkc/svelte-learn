@@ -2,7 +2,12 @@
 	import { page } from '$app/state';
 	import logoDark from '$lib/assets/logo-white.png';
 	import CartButton from '$lib/components/CartButton.svelte';
-   
+
+	// Props
+	let { userData = null } = $props();
+
+	// Compute display name from user data
+	let displayName = $derived(userData?.name || userData?.email?.split('@')[0] || userData?.email || 'Members Area');
 
 	// Navigation items
 	const navItems = [
@@ -67,37 +72,13 @@
 		<!-- Desktop Actions -->
 		<div class="hidden items-center space-x-4 md:flex">
 			<CartButton />
-			<div
-				class="rounded-3xl bg-white px-3 py-1 no-underline outline-none hover:bg-gray-300 hover:no-underline"
-			>
-				<button class="text-base tracking-normal text-black transition-colors duration-300">
-					Members Area
-				</button>
-			</div>
-		</div>
-
-		<div class="flex items-center gap-3">
 			<a
-				href="/logout"
-				aria-label="Sign Out"
-				title="Sign Out"
-				class="transition-opacity hover:opacity-80"
-				type="button"
+				href="/profile"
+				class="rounded-3xl bg-white px-3 py-1 no-underline outline-none hover:bg-gray-300 hover:no-underline transition-colors duration-300"
 			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke-width="1.5"
-					stroke="currentColor"
-					class="size-6"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
-					/>
-				</svg>
+				<span class="text-base tracking-normal !text-black">
+					{displayName}
+				</span>
 			</a>
 		</div>
 
@@ -198,12 +179,13 @@
 				{/each}
 
 				<div class="w-full !bg-transparent p-3 pt-6">
-					<button
-						class="w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
+					<a
+						href="/profile"
+						class="block w-full rounded-lg bg-indigo-600 px-4 py-2 text-center text-sm font-medium text-white transition-colors hover:bg-indigo-700"
 						onclick={closeMobileMenu}
 					>
-						Members Area
-					</button>
+						{displayName}
+					</a>
 				</div>
 			</div>
 		</div>

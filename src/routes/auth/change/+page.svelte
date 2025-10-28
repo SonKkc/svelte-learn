@@ -1,7 +1,6 @@
 <script>
     import { enhance } from "$app/forms";
     import { page } from "$app/state";
-
     let {form} = $props()
 </script>
 
